@@ -1,0 +1,85 @@
+import * as React from 'react'
+import '../styles/app.css'
+import { Sidebar } from './Sidebar'
+import { Bar } from './Bar'
+import { generateRandomArray } from '../utils/helpers'
+import {
+  insertionSort,
+  selectionSort,
+  bubbleSort,
+  countSort,
+} from '../utils/algorithms'
+
+const App: React.FC = (): JSX.Element => {
+  const [arrLength, setArrLength] = React.useState<number>(5)
+  const [algo, setAlgo] = React.useState<string>('Insertion Sort')
+  const [array, setArray] = React.useState<number[]>(() =>
+    generateRandomArray(arrLength)
+  )
+  const [sorted, setSorted] = React.useState<boolean>(false)
+  const [click, setClick] = React.useState<boolean>(false)
+
+  const handleSort = (): void => {
+    if (sorted) {
+      setClick(true)
+      return
+    }
+    switch (algo) {
+      case 'Insertion Sort':
+        setArray((prevArr) => insertionSort(prevArr))
+        break
+      case 'Selection Sort':
+        setArray((prevArr) => selectionSort(prevArr))
+        break
+      case 'Bubble Sort':
+        setArray((prevArr) => bubbleSort(prevArr))
+        break
+      case 'Count Sort':
+        setArray((prevArr) => countSort(prevArr))
+        break
+      default:
+        setArray((prevArr) => selectionSort(prevArr))
+        break
+    }
+    setSorted(true)
+  }
+
+  const handleReset = (): void => {
+    setArray(() => generateRandomArray(arrLength))
+    setSorted(false)
+    setClick(false)
+  }
+
+  React.useEffect((): void => {
+    setTimeout((): void => {
+      setClick(false)
+    }, 1000)
+  }, [click])
+
+  return (
+    <React.Fragment>
+      <div className='App'>
+        <Sidebar
+          algo={algo}
+          arrLength={arrLength}
+          setAlgo={setAlgo}
+          setArrLength={setArrLength}
+          handleSort={handleSort}
+          handleReset={handleReset}
+        />
+        <section className='area'>
+          <div className='array'>
+            {array.map((elem, index) => {
+              return <Bar key={index} height={elem} />
+            })}
+          </div>
+          {click ? (
+            <div className='alert'>The array is already sorted</div>
+          ) : null}
+        </section>
+      </div>
+    </React.Fragment>
+  )
+}
+
+export default App
