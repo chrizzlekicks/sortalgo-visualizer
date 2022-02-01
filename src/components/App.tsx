@@ -1,7 +1,6 @@
 import * as React from 'react'
-import '../styles/app.css'
-import { Sidebar } from './Sidebar'
-import { Bar } from './Bar'
+import { Sidebar } from './Sidebar/Sidebar'
+import { Table } from './Table/Table'
 import { generateRandomArray } from '../utils/helpers'
 import {
   insertionSort,
@@ -9,6 +8,12 @@ import {
   bubbleSort,
   countSort,
 } from '../utils/algorithms'
+import styled from 'styled-components'
+
+const Main = styled('main')`
+  display: flex;
+  justify-content: center;
+`
 
 const App: React.FC = (): JSX.Element => {
   const [arrLength, setArrLength] = React.useState<number>(5)
@@ -57,28 +62,17 @@ const App: React.FC = (): JSX.Element => {
   }, [click])
 
   return (
-    <React.Fragment>
-      <div className='App'>
-        <Sidebar
-          algo={algo}
-          arrLength={arrLength}
-          setAlgo={setAlgo}
-          setArrLength={setArrLength}
-          handleSort={handleSort}
-          handleReset={handleReset}
-        />
-        <section className='area'>
-          <div className='array'>
-            {array.map((elem, index) => {
-              return <Bar key={index} height={elem} />
-            })}
-          </div>
-          {click ? (
-            <div className='alert'>The array is already sorted</div>
-          ) : null}
-        </section>
-      </div>
-    </React.Fragment>
+    <Main>
+      <Sidebar
+        algo={algo}
+        arrLength={arrLength}
+        setAlgo={setAlgo}
+        setArrLength={setArrLength}
+        handleSort={handleSort}
+        handleReset={handleReset}
+      />
+      <Table array={array} click={click} />
+    </Main>
   )
 }
 
